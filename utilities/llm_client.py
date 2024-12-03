@@ -2,6 +2,7 @@ from . import bedrockclient
 from langchain_aws import BedrockEmbeddings
 import os
 from langchain_community.llms import Bedrock
+from langchain_aws import BedrockLLM
 
 #Create bedrock client instance function.
 
@@ -30,5 +31,6 @@ def get_titan_embedding_model():
 
 def get_bedrock_anthropic_claude_llm():
     boto3_bedrock=get_bedrock_client()
-    llm = Bedrock(model_id="anthropic.claude-v2", client=boto3_bedrock, model_kwargs={"max_tokens_to_sample": 200,"temperature": 0.2,"top_p": 0.9})
+    #llm = Bedrock(model_id="anthropic.claude-v2", client=boto3_bedrock, model_kwargs={"max_tokens_to_sample": 200,"temperature": 0.2,"top_p": 0.9})
+    llm = BedrockLLM(model_id="anthropic.claude-v2", client=boto3_bedrock, model_kwargs={"max_tokens_to_sample": 2048,"temperature": 0.2,"top_p": 0.9})
     return llm

@@ -1,5 +1,6 @@
 from utilities import llm_client
 from utilities import esclient
+from utilities import textutil
 import boto3
 from utilities import llm_client
 import os
@@ -31,28 +32,30 @@ def get_vector_store():
     return es_vector_store
 
 def chat_interface():
-    print("Welcome to the Ashu & Ananya's ChatBot! Type 'exit' to end the chat.")
-    print("=====================================")
+    tu = textutil.textcolor()
+    print("====================================================================================================================================================")
+    print(tu.BOLD +"....................................................Welcome to the Ashu & Ananya's ChatBot! Type 'exit' to end the chat............................."+ tu.END)
+    print("====================================================================================================================================================")
     try:
         while True:
             try:
-                user_input = input("\nYou: ").strip()
+                user_input = input(tu.BOLD +tu.BLUE+"\nYou: "+tu.BLUE+tu.BOLD ).strip()
                 # Handle empty input (Enter key)
                 if not user_input:
-                    print("ChatBot: I'm still here! Feel free to type something.")
+                    print(tu.PURPLE+"ChatBot: I'm still here! Feel free to type something."+tu.PURPLE)
                     continue
                 if user_input.lower() == "exit":
-                    print("ChatBot: Goodbye! Have a great day!")
+                    print(tu.RED+"ChatBot: Goodbye! Have a great day!"+tu.RED)
                     break
                 
                 # Process user input and generate a response
                 response = process_user_input(user_input)
-                print(f"ChatBot: {response}")
+                print(tu.BOLD +tu.GREEN+f"ChatBot: {response}"+tu.GREEN+tu.BOLD)
             except EOFError:
-                print("\nChatBot: Looks like you want to end the chat. Goodbye!")
+                print(tu.RED+"\nChatBot: Looks like you want to end the chat. Goodbye!"+tu.RED)
                 break
     except KeyboardInterrupt:  # Gracefully handle Ctrl+C
-        print("\n\nChatBot: Chat interrupted. See you next time!")
+        print(tu.RED+"\n\nChatBot: Chat interrupted. See you next time!"+tu.RED)
 
 def process_user_input(user_input):
     # Example response logic (you can replace this with your own logic or model inference)
@@ -66,7 +69,8 @@ def process_user_input(user_input):
         chain_type_kwargs={"prompt": PROMPT},
     )
 
-    result = qa_prompt({"query": user_input})
+    #result = qa_prompt({"query": user_input})
+    result = qa_prompt.invoke({"query": user_input})
     ai_response=dumps(result, pretty=True)
     ai_response=json.loads(ai_response)
     #print("Human Query: ", ai_response["query"])
